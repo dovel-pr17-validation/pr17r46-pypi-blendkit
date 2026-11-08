@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.1"
-content_hash = "sha256:3af592dc1882eb9e87914d2c11e95191dc43a39d8728e1ef2e93a3b125925c60"
+content_hash = "sha256:dbf264d182460b0a415f0d3ba0d05b93d850e64773c7266f366e8bb7247f8d49"
 
 [[metadata.targets]]
 requires_python = ">=3.10,<3.13"
@@ -330,19 +330,19 @@ files = [
 
 [[package]]
 name = "requests"
-version = "2.32.3"
-requires_python = ">=3.8"
+version = "2.34.2"
+requires_python = ">=3.10"
 summary = "Python HTTP for Humans."
 groups = ["default"]
 dependencies = [
-    "certifi>=2017.4.17",
+    "certifi>=2023.5.7",
     "charset-normalizer<4,>=2",
     "idna<4,>=2.5",
-    "urllib3<3,>=1.21.1",
+    "urllib3<3,>=1.26",
 ]
 files = [
-    {file = "requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"},
-    {file = "requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760"},
+    {file = "requests-2.34.2-py3-none-any.whl", hash = "sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0"},
+    {file = "requests-2.34.2.tar.gz", hash = "sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed"},
 ]
 
 [[package]]

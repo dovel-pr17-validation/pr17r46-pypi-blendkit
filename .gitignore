@@ -1,0 +1,34 @@
+__pycache__
+out
+# ignore built binaries
+client/v*.*.*
+client/client.exe
+client/RESOLVED_VERSION
+bk_client/client/bk_client-settings.json
+
+pyproject.toml
+client_builds
+.mypy_cache
+.venv
+.pdm-python
+
+.ruff_cache
+
+# prevent publishing of dynamically created updater cache
+*_updater_status.json
+
+# debug and backup folders
+_debug/
+_bck/
+
+# debug env variables
+.env
+
+# macos thumbnail database
+.DS_Store
+
+# ignore temp blend files
+*.blend1
+
+# ignore thumbnailer testing output
+**/camera_sweep

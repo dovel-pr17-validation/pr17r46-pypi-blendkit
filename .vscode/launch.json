@@ -1,0 +1,407 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // define custom variables
+
+    "version": "0.2.0",
+    "configurations": [
+
+
+        {
+            "name": "Run Project Setup",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "runtimeExecutable": "${workspaceFolder}/.vscode/pdm_setup_project.bat",
+            },
+            "linux": {
+                "runtimeExecutable": "${workspaceFolder}/.vscode/pdm_setup_project.sh",
+            },
+            "osx": {
+                "runtimeExecutable": "${workspaceFolder}/.vscode/pdm_setup_project.sh",
+            }
+        },
+
+        {
+            "name": "Build Addon and Hardlink",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/.vscode/build_and_hardlink_addon_to_blenders.py",
+            "args": [
+                "build",
+            ],
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+        {
+            "name": "Remove Addon Hardlinks",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/.vscode/remove_hardlinks_from_blenders.py",
+            "args": [
+                "build",
+            ],
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+        {
+            "name": "Run Blender 5.2.3",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "BLENDKIT_DEBUG": "1"
+            },
+            "windows": {
+                "args": [
+                    "-dev"
+                ],
+                "runtimeExecutable": "D:/blenders/5.2.3/blender.exe",
+            },
+            "linux": {
+                "runtimeExecutable": "blender",
+            },
+            "osx": {
+                "runtimeExecutable": "/Applications/Blender 5.2.app/Contents/MacOS/Blender",
+            }
+        },
+
+        {
+            "name": "Run Blender 5.2.3 devel",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "BLENDKIT_DEBUG": "1",
+                "BLENDKIT_SERVER": "https://devel.blendkit.com"
+            },
+            "windows": {
+                "args": [
+                    "-dev"
+                ],
+                "runtimeExecutable": "D:/blenders/5.2.3/blender.exe",
+            },
+            "linux": {
+                "runtimeExecutable": "blender",
+            },
+            "osx": {
+                "runtimeExecutable": "/Applications/Blender 5.2.app/Contents/MacOS/Blender",
+            }
+        },
+
+        {
+            "name": "Run Blender 5.2.3 Tests",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "runtimeExecutable": "D:/blenders/5.2/blender.exe",
+                "args": [
+                    "-noaudio",
+                    "--python-exit-code",
+                    "1",
+                    "--python",
+                    "tests/test.py",
+                    "--",
+                    "blenderkit_dev_hl"
+                ]
+            },
+            "linux": {
+                "runtimeExecutable": "blender",
+                "args": [
+                    "-noaudio",
+                    "--python-exit-code",
+                    "1",
+                    "--python",
+                    "tests/test.py",
+                    "--",
+                    "blenderkit_dev_hl"
+                ]
+            },
+            "osx": {
+                "runtimeExecutable": "/Applications/Blender 5.2.app/Contents/MacOS/Blender",                "args": [
+                    "-noaudio",
+                    "--python-exit-code",
+                    "1",
+                    "--python",
+                    "tests/test.py",
+                    "--",
+                    "blenderkit_dev_hl"
+                ]
+            }
+        },
+
+
+        {
+            "name": "Run dev.py test install",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/dev.py",
+            "args": [
+                "test",
+                "--install-at",
+                "c:/temp/runner/blender/scripts/addons",
+            ],
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+
+        {
+            "name": "[RUFF] Check formatting",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "ruff",
+            "args": [
+                "format",
+                ".",
+                "--check", "--diff",
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+        {
+            "name": "[RUFF] Check git changed files",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/ruff_git_changed.py",
+            "args": [],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+        {
+            "name": "[GOFMT] Check client",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "runtimeExecutable": "powershell",
+                "args": [
+                    "-NoLogo",
+                    "-NoProfile",
+                    "-Command",
+                    "$fmt = gofmt -l ./client; if ($fmt) { Write-Host 'Go files need formatting:'; $fmt; Write-Host ''; Write-Host 'gofmt diff:'; gofmt -d ./client; exit 1 } else { Write-Host 'Go files are formatted.' }"
+                ]
+            },
+            "linux": {
+                "runtimeExecutable": "/bin/bash",
+                "args": [
+                    "-c",
+                    "fmt_out=\"$(gofmt -l ./client)\"; if [ -n \"$fmt_out\" ]; then echo 'Go files need formatting:'; echo \"$fmt_out\"; echo ''; echo 'gofmt diff:'; gofmt -d ./client; exit 1; else echo 'Go files are formatted.'; fi"
+                ]
+            },
+            "osx": {
+                "runtimeExecutable": "/bin/bash",
+                "args": [
+                    "-c",
+                    "fmt_out=\"$(gofmt -l ./client)\"; if [ -n \"$fmt_out\" ]; then echo 'Go files need formatting:'; echo \"$fmt_out\"; echo ''; echo 'gofmt diff:'; gofmt -d ./client; exit 1; else echo 'Go files are formatted.'; fi"
+                ]
+            }
+        },
+
+        {
+            "name": "[GOFMT] Fix client",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "runtimeExecutable": "powershell",
+                "args": [
+                    "-NoLogo",
+                    "-NoProfile",
+                    "-Command",
+                    "$fmt = gofmt -w ./client; if ($fmt) { Write-Host 'Go files need formatting:'; $fmt; Write-Host ''; Write-Host 'gofmt diff:'; gofmt -d ./client; exit 1 } else { Write-Host 'Go files are formatted.' }"
+                ]
+            },
+            "linux": {
+                "runtimeExecutable": "/bin/bash",
+                "args": [
+                    "-c",
+                    "fmt_out=\"$(gofmt -w ./client)\"; if [ -n \"$fmt_out\" ]; then echo 'Go files need formatting:'; echo \"$fmt_out\"; echo ''; echo 'gofmt diff:'; gofmt -d ./client; exit 1; else echo 'Go files are formatted.'; fi"
+                ]
+            },
+            "osx": {
+                "runtimeExecutable": "/bin/bash",
+                "args": [
+                    "-c",
+                    "fmt_out=\"$(gofmt -w ./client)\"; if [ -n \"$fmt_out\" ]; then echo 'Go files need formatting:'; echo \"$fmt_out\"; echo ''; echo 'gofmt diff:'; gofmt -d ./client; exit 1; else echo 'Go files are formatted.'; fi"
+                ]
+            }
+        },
+
+        {
+            "name": "[RUFF] Check imports",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "ruff",
+            "args": [
+                "check",
+                "."
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+        {
+            "name": "[FUTURE][BANDIT] Check All",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "bandit",
+            "args": [
+                "-c", "_bandit.yaml",
+                "-ll",
+                "-r", ".",
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+        {
+            "name": "Run test.py in Blender",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "windows": {
+                "runtimeExecutable": "powershell",
+                "args": [
+                    "-NoLogo",
+                    "-NoProfile",
+                    "-Command",
+                    "D:\\blenders\\5.1.2\\blender.exe --background -noaudio --python-exit-code 1 --python tests/test.py -- blenderkit_dev_hl"
+                ]
+            },
+            "linux": {
+                "runtimeExecutable": "/bin/bash",
+                "args": [
+                    "-c",
+                    "blender --background -noaudio --python-exit-code 1 --python tests/test.py -- blenderkit_dev_hl"
+                ]
+            },
+            "osx": {
+                "runtimeExecutable": "/bin/bash",
+                "args": [
+                    "-c",
+                    "/Applications/Blender.app/Contents/MacOS/Blender --background -noaudio --python-exit-code 1 --python tests/test.py -- blenderkit_dev_hl"
+                ]
+            }
+        },
+
+        {
+            "name": "[PYDOCS] Check All",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pydoclint.main",
+            "args": ["--quiet", "."],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+        {
+            "name": "Build Release Zip",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/dev.py",
+            "args": [
+                "build",
+            ],
+            "windows": {
+                "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            },
+            "osx": {
+                "python": "${workspaceFolder}/.venv/bin/python",
+            }
+        },
+
+    ]
+}

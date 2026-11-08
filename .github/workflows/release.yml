@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_stage:
+        type: choice
+        description: Release Stage
+        options:
+        - alpha
+        - beta
+        - rc
+        - gold
+      version:
+        default: "3.Y.Z.YYMMDD"
+        required: true
+
+jobs:
+  Checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install
+        run: pip install -r devs/requirements.txt
+      - name: Ruff import sorting
+        run: python -m ruff check . --output-format=github
+      - name: Ruff formatting
+        run: python -m ruff format . --check --diff
+      - name: Pydoclint documentation
+        run: python -m pydoclint.main --quiet .
+      - name: Server set to production
+        run: python3 -c 'from global_vars import SERVER; assert SERVER == "https://www.blendkit.com"'
+      - name: Add-on Version set to ${{inputs.version}}
+        run: python3 -c "import re; f = open('__init__.py'); version_init = re.search(r'\"version\":\s*\((.*?)\)', f.read()).group(1); f.close(); assert tuple(map(int, version_init.split(', '))) == tuple(map(int, '${{inputs.version}}'.split('.'))), f'Version mismatch of {version_init} and ${{inputs.version}}'"
+
+  Release_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Version set to ${{inputs.version}}
+        run: python3 -c "import re; f = open('__init__.py'); version_init = re.search(r'\"version\":\s*\((.*?)\)', f.read()).group(1); f.close(); assert tuple(map(int, version_init.split(', '))) == tuple(map(int, '${{inputs.version}}'.split('.'))), f'Version mismatch of {version_init} and ${{inputs.version}}'"
+
+  Release:
+    needs: [Checks, Release_checks, TESTS]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Checkout bk_proxor submodule
+        run: git submodule update --init bk_proxor
+      - name: Build add-on
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python dev.py build
+      - name: Rename add-on
+        run: mv out/blenderkit.zip out/blenderkit-v${{inputs.version}}.zip
+      #- name: Generate Changelog
+      #  run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          draft: true # always draft, we want to check the release notes
+          name: Blendkit v${{inputs.version}}${{ inputs.release_stage == 'gold' && '' || format('-{0}', inputs.release_stage) }}
+          prerelease: ${{ inputs.release_stage != 'gold' && 'true' || 'false' }}
+          tag_name: v${{inputs.version}}
+          #body_path: ${{ github.workspace }}-CHANGELOG.txt
+          files: out/blenderkit-v${{inputs.version}}.zip
+
+  make-tests-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: set-matrix
+        run: python .github/make-tests-matrix.py >> $GITHUB_OUTPUT
+
+  TESTS:
+    needs: make-tests-matrix
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.make-tests-matrix.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Checkout bk_proxor submodule
+        run: git submodule update --init bk_proxor
+      - name: Cache Blender
+        id: blenderBinaryCache
+        uses: actions/cache@v6
+        with:
+          path: /home/runner/blender
+          key: blender-${{matrix.version}}-${{matrix.sha}}
+      - name: Download Blender
+        if: steps.blenderBinaryCache.outputs.cache-hit != 'true'
+        run: curl ${{ matrix.download_url }} -o /home/runner/blender.tar.xz
+      - name: Mkdir
+        run: mkdir {/home/runner/.local/bin,/home/runner/blender} -p
+      - name: Extract Blender
+        if: steps.blenderBinaryCache.outputs.cache-hit != 'true'
+        run: tar -xf /home/runner/blender.tar.xz -C /home/runner/blender --strip-components=1
+      - name: Add Blender to PATH
+        run: ln -s /home/runner/blender/blender /home/runner/.local/bin/blender
+      - name: TEST
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python dev.py test --install-at /home/runner/.config/blender/${{matrix.version_x_y}}/scripts/addons
